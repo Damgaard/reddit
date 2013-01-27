@@ -1983,6 +1983,19 @@ class ApiController(RedditController, OAuth2ResourceController):
                 things = VByName('id', multiple=True, limit=25))
     @api_doc(api_section.messages)
     def POST_unread_message(self, things):
+        """Mark the message(s) and/or comment(s) as unread.
+        
+        `id` is a comma delimited list of comment/message ids, with up to 25
+        elements.
+        
+        Messages and comments made by the currently authenticated user cannot
+        be marked as unread
+        [See issue 346](https://github.com/reddit/reddit/issues/346).
+        
+        This will not update the authenticated user's new mail status
+        [See issue 648](https://github.com/reddit/reddit/issues/648).
+         
+        """
         self.unread_handler(things, True)
 
     @require_oauth2_scope("privatemessages")
@@ -1991,6 +2004,15 @@ class ApiController(RedditController, OAuth2ResourceController):
                 things = VByName('id', multiple=True, limit=25))
     @api_doc(api_section.messages)
     def POST_read_message(self, things):
+        """Mark the message(s) and/or comment(s) as read.
+        
+        `id` is a comma delimited list of comment/message ids, with up to 25
+        elements.
+        
+        This will not update the authenticated user's new mail status
+        [See issue 648](https://github.com/reddit/reddit/issues/648).
+         
+        """
         self.unread_handler(things, False)
 
     @noresponse(VUser(),
